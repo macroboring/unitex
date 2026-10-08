@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UniTex 隐私政策</title>
+<!--
+  这一份同时用在两个地方：
+    1. 应用内 —— PrivacyPage 用 Web 组件加载 resource://rawfile/privacy.html
+    2. 应用市场提审时填的那个「隐私政策 URL」（托管到 GitHub Pages）
+
+  所以它是**纯内联**的：没有外部 CSS、字体、图片、脚本。应用内离线打开必须能完整渲染，
+  一旦引用了外部资源，没网时页面就是白的 —— 那等于"没有隐私政策"，审核会挑。
+
+  改动时请两处一起更新（应用内与托管页用的是同一个文件，所以只有一份内容）。
+-->
+<style>
+  :root { color-scheme: light; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 20px 18px 48px;
+    font-family: "HarmonyOS Sans SC", "Source Han Sans SC", "Microsoft YaHei", system-ui, -apple-system, sans-serif;
+    font-size: 15px;
+    line-height: 1.75;
+    color: #1F2933;
+    background: #FFFFFF;
+    -webkit-text-size-adjust: 100%;
+  }
+  h1 { font-size: 21px; margin: 0 0 4px; color: #102A43; }
+  h2 { font-size: 16px; margin: 28px 0 8px; color: #102A43; }
+  h3 { font-size: 15px; margin: 18px 0 6px; color: #243B53; }
+  p, li { margin: 6px 0; }
+  ul, ol { padding-left: 22px; margin: 6px 0; }
+  .meta { color: #627D98; font-size: 13px; margin: 0 0 8px; }
+  .lead {
+    background: #F0F7FF;
+    border-left: 3px solid #2563EB;
+    padding: 12px 14px;
+    border-radius: 6px;
+    margin: 14px 0 4px;
+  }
+  .warn {
+    background: #FFFBEB;
+    border-left: 3px solid #F59E0B;
+    padding: 12px 14px;
+    border-radius: 6px;
+    margin: 14px 0;
+  }
+  code {
+    font-family: "Consolas", "Menlo", monospace;
+    font-size: 13px;
+    background: #EEF2F6;
+    padding: 1px 5px;
+    border-radius: 4px;
+  }
+  .foot { margin-top: 32px; padding-top: 14px; border-top: 1px solid #E4E7EB; color: #829AB1; font-size: 13px; }
+</style>
+</head>
+<body>
+
+<h1>UniTex 隐私政策</h1>
+<p class="meta">生效日期：2026 年 10 月 8 日　·　开发者：马柏赢　·　联系邮箱：2056187056@qq.com</p>
+
+<div class="lead">
+  <strong>一句话概括：</strong>UniTex 默认在设备本地完成全部识别，<strong>不联网、不上传任何数据</strong>。
+  只有当你主动在「选项」里切换并配置了在线模型后，裁剪出的公式图片才会发送到
+  <strong>由你自己填写的那个服务地址</strong>。除此之外，本应用不与任何服务器通信。
+</div>
+
+<h2>一、会离开设备的数据</h2>
+<p>只有一种，且需要你主动开启：</p>
+<ul>
+  <li><strong>默认状态（本地模型）：零。</strong>图片、识别结果、全部设置都留在设备内。应用不会发起任何网络请求。</li>
+  <li><strong>你切换到「在线 API」之后：</strong>应用会把<strong>检测出的公式区域裁剪出的图片</strong>发送到你在「选项」里填写的接口地址，用于换取该区域的 LaTeX 代码。
+      发送的是<strong>裁剪后的小图</strong>，不是整张原图。</li>
+  <li>你在「选项」里填写的接口地址、模型名称和 API Key，保存在本机应用私有目录。其中 API Key 会作为身份凭证随请求发送到<strong>你自己填写的那个服务地址</strong>——这是该服务识别你身份的方式，不发送则无法调用。</li>
+</ul>
+
+<div class="warn">
+  <strong>请注意：</strong>切换为在线模型后，图片将离开你的设备，并由<strong>你选择的第三方服务商</strong>处理。
+  该服务商如何处理与保存数据，适用其自身的隐私政策，本应用无法控制，也不对其负责。
+  如果图片含有你不希望外传的内容，请保持在默认的本地模型模式。
+</div>
+
+<h2>二、我们不做的事</h2>
+<ul>
+  <li>不收集设备标识符、位置、通讯录、短信、通话记录；</li>
+  <li>没有账号体系，不需要注册或登录；</li>
+  <li>没有广告，没有统计埋点，没有用户行为分析；</li>
+  <li><strong>没有集成任何第三方 SDK。</strong></li>
+</ul>
+
+<h2>三、权限说明</h2>
+<ul>
+  <li><code>ohos.permission.INTERNET</code>（网络访问）：<strong>本应用申请的唯一个权限。</strong>
+      它只在「在线 API」模式下才真正使用；本地模型模式不会产生任何网络流量。</li>
+  <li><strong>相机与相册：</strong>通过系统的图片选择器与相机应用打开，
+      <strong>应用只能拿到你明确选中的那一张图片</strong>，无法访问相册中的其他内容，也不会在后台读取。</li>
+  <li><strong>手写输入：</strong>使用系统提供的手写板组件，笔迹仅用于生成待识别的图片，
+      不会离开设备（除非你又选择了在线模型模式）。</li>
+</ul>
+
+<h2>四、数据保存与删除</h2>
+<ul>
+  <li>设置项（含 API Key）、识别模型文件、内置示例图保存在应用私有目录中，其他应用无法读取。</li>
+  <li>识别结果只存在于应用运行期间，不会写入任何持久文件（除非你主动复制或保存）。</li>
+  <li><strong>卸载本应用即可删除上述全部数据。</strong>你也可以随时在「选项」中清空 API Key。</li>
+</ul>
+
+<h2>五、未成年人</h2>
+<p>本应用不面向未成年人单独提供服务，也不会有意收集未成年人的个人信息。</p>
+
+<h2>六、本政策的更新</h2>
+<p>如果本政策发生变更，我们会在应用内更新本页面并修改顶部的生效日期。
+继续使用本应用即表示你接受更新后的政策。</p>
+
+<h2>七、联系我们</h2>
+<p>对本政策或你的数据有任何疑问、意见或投诉，请联系：<strong>2056187056@qq.com</strong>。</p>
+
+<p class="foot">UniTex · 开发者 马柏赢</p>
+
+</body>
+</html>
