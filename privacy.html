@@ -15,7 +15,36 @@
   改动时请两处一起更新（应用内与托管页用的是同一个文件，所以只有一份内容）。
 -->
 <style>
-  :root { color-scheme: light; }
+  /* 浅色 / 深色两套。用变量而不是媒体查询里重写每条规则 —— 规则多了容易漏。 */
+  :root {
+    color-scheme: light dark;
+    --fg: #1F2933;
+    --bg: #FFFFFF;
+    --h1: #102A43;
+    --h3: #243B53;
+    --muted: #627D98;
+    --lead-bg: #F0F7FF;
+    --warn-bg: #FFFBEB;
+    --warn: #F59E0B;
+    --accent: #2563EB;
+    --code-bg: #EEF2F6;
+    --line: #E4E7EB;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --fg: #E6EDF3;
+      --bg: #0D1117;
+      --h1: #E6EDF3;
+      --h3: #C9D6E2;
+      --muted: #8B98A5;
+      --lead-bg: #1B2A4A;
+      --warn-bg: #3A2E12;
+      --warn: #FBBF24;
+      --accent: #6EA8FE;
+      --code-bg: #1C2530;
+      --line: #26303A;
+    }
+  }
   * { box-sizing: border-box; }
   body {
     margin: 0;
@@ -23,26 +52,26 @@
     font-family: "HarmonyOS Sans SC", "Source Han Sans SC", "Microsoft YaHei", system-ui, -apple-system, sans-serif;
     font-size: 15px;
     line-height: 1.75;
-    color: #1F2933;
-    background: #FFFFFF;
+    color: var(--fg);
+    background: var(--bg);
     -webkit-text-size-adjust: 100%;
   }
-  h1 { font-size: 21px; margin: 0 0 4px; color: #102A43; }
-  h2 { font-size: 16px; margin: 28px 0 8px; color: #102A43; }
-  h3 { font-size: 15px; margin: 18px 0 6px; color: #243B53; }
+  h1 { font-size: 21px; margin: 0 0 4px; color: var(--h1); }
+  h2 { font-size: 16px; margin: 28px 0 8px; color: var(--h1); }
+  h3 { font-size: 15px; margin: 18px 0 6px; color: var(--h3); }
   p, li { margin: 6px 0; }
   ul, ol { padding-left: 22px; margin: 6px 0; }
-  .meta { color: #627D98; font-size: 13px; margin: 0 0 8px; }
+  .meta { color: var(--muted); font-size: 13px; margin: 0 0 8px; }
   .lead {
-    background: #F0F7FF;
-    border-left: 3px solid #2563EB;
+    background: var(--lead-bg);
+    border-left: 3px solid var(--accent);
     padding: 12px 14px;
     border-radius: 6px;
     margin: 14px 0 4px;
   }
   .warn {
-    background: #FFFBEB;
-    border-left: 3px solid #F59E0B;
+    background: var(--warn-bg);
+    border-left: 3px solid var(--warn);
     padding: 12px 14px;
     border-radius: 6px;
     margin: 14px 0;
@@ -50,11 +79,11 @@
   code {
     font-family: "Consolas", "Menlo", monospace;
     font-size: 13px;
-    background: #EEF2F6;
+    background: var(--code-bg);
     padding: 1px 5px;
     border-radius: 4px;
   }
-  .foot { margin-top: 32px; padding-top: 14px; border-top: 1px solid #E4E7EB; color: #829AB1; font-size: 13px; }
+  .foot { margin-top: 32px; padding-top: 14px; border-top: 1px solid var(--line); color: var(--muted); font-size: 13px; }
 </style>
 </head>
 <body>
@@ -65,7 +94,8 @@
 <div class="lead">
   <strong>一句话概括：UniTex 不联网。</strong>识别全部在设备本地完成，图片、
   识别结果和设置都留在你的设备内。应用<strong>不声明任何网络权限</strong>，
-  不存在把数据发送出去的路径。
+  不存在把数据发送出去的路径。应用会在你点击「粘贴」时读取剪贴板中的图片，
+  仅用于本地识别，具体见「三、权限说明」。
 </div>
 
 <h2>一、会离开设备的数据：没有</h2>
@@ -80,6 +110,7 @@
   <li>不收集设备标识符、位置、通讯录、短信、通话记录；</li>
   <li>没有账号体系，不需要注册或登录；</li>
   <li>没有广告，没有统计埋点，没有用户行为分析；</li>
+  <li>不读取剪贴板中的文字、链接、验证码等任何非图片内容，也不在后台或启动时读取剪贴板；</li>
   <li><strong>没有集成任何第三方 SDK。</strong></li>
 </ul>
 
@@ -91,6 +122,11 @@
       <strong>应用只能拿到你明确选中的那一张图片</strong>，无法访问相册中的其他内容，也不会在后台读取。</li>
   <li><strong>手写输入：</strong>使用系统提供的手写板组件，笔迹仅用于生成待识别的图片，
       全程留在设备内。</li>
+  <li><strong>剪贴板：</strong>「粘贴」功能需要读取系统剪贴板里的图片。读取发生在你点击
+      「粘贴」按钮的那一刻，且只取其中的<strong>图片</strong>；<strong>不读取剪贴板中的文字内容，
+      不在后台或启动时读取，也不会上传</strong>。读到的图片会先存成本地缓存文件用于识别，识别完成后
+      随缓存一起清理。系统本身要求读取剪贴板必须由用户点击专用控件授权，本应用遵守这一限制——
+      这也是为什么「粘贴」必须点按钮而不能自动触发。</li>
 </ul>
 
 <h2>四、AI 生成内容的说明</h2>
